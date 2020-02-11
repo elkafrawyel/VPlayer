@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
         videosRv.recycledViewPool.clear()
         doAsync {
 
-            val sortOrder = MediaStore.Video.Media.DISPLAY_NAME + " DESC";
+            val sortOrder = MediaStore.Video.Media.DISPLAY_NAME;
 
             val uriVideo: Uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             val projectionVideo = arrayOf(
