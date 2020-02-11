@@ -1,4 +1,4 @@
-package com.media.vplayer.ui.player
+package com.pip.vplayer.ui.player
 
 import android.annotation.SuppressLint
 import android.app.PictureInPictureParams
@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.database.Cursor
 import android.database.DatabaseUtils
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.media.MediaMetadataRetriever
@@ -26,10 +27,10 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.media.vplayer.BuildConfig
-import com.media.vplayer.R
-import com.media.vplayer.ui.data.VideoItem
-import com.media.vplayer.uitiles.PreferencesHelper
+import com.pip.vplayer.BuildConfig
+import com.pip.vplayer.R
+import com.pip.vplayer.ui.data.VideoItem
+import com.pip.vplayer.uitiles.PreferencesHelper
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory
@@ -48,6 +49,7 @@ import com.google.android.exoplayer2.util.Util
 import com.google.android.exoplayer2.video.VideoListener
 import kotlinx.android.synthetic.main.activity_player.*
 import java.io.ByteArrayInputStream
+import java.io.File
 import java.io.InputStream
 import java.lang.Exception
 
@@ -60,7 +62,6 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
         const val TEST_URL1 =
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
         const val TAG = "VPlayer"
-
         const val UrlExtra_List = "videoUrl_List"
         const val UrlExtra = "videoUrl"
         const val UrlExtra_Position = "video_position"
@@ -72,35 +73,23 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
             intent.putExtra(UrlExtra_Position, position)
             context.startActivity(intent)
         }
-
-        fun start(context: Context, mUrl: String) {
-            val intent = Intent(context, PlayerActivity::class.java)
-            intent.setClass(context, PlayerActivity::class.java)
-            intent.putExtra(UrlExtra, mUrl)
-            context.startActivity(intent)
-        }
     }
 
     private var BANDWIDTH = DefaultBandwidthMeter()
     var player: SimpleExoPlayer? = null
-
     var singleVideo = false
     var mUrlPosition = 0
     var mUrlList: MutableList<VideoItem> = mutableListOf()
     var mUrl: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setAppTheme()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
-
-
         handleIntent(intent, false)
-
-
         val pipBtn = video_view.findViewById<ImageButton>(R.id.exo_pip_button)
         pipBtn.setOnClickListener { enterPIPMode() }
         back.setOnClickListener { onBackPressed() }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
             && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
         ) {
@@ -115,27 +104,25 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
             1 -> setTheme(R.style.AppThemeOne)
             2 -> setTheme(R.style.AppThemeTwo)
             3 -> setTheme(R.style.AppThemeThree)
-
+            4 -> setTheme(R.style.AppThemeFour)
+            5 -> setTheme(R.style.AppThemeFive)
         }
     }
 
     private fun handleIntent(intent: Intent, newIntent: Boolean) {
         if (!newIntent)
             initiatePlayer()
-
         if (intent.data != null) {
             //outside the app intent
             mUrl = getRealPathFromUri(intent.data!!)
             singleVideo = true
             mUrl?.let { play(it) }
-
         } else {
             singleVideo = false
             mUrlList = intent.extras?.getParcelableArrayList<VideoItem>(UrlExtra_List)!!
             mUrlPosition = intent.extras?.getInt(UrlExtra_Position, 0)!!
             play(mUrlList)
         }
-
     }
 
     override fun onResume() {
@@ -204,11 +191,8 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
     }
 
     private fun initiatePlayer() {
-
         release()
-
         val adaptiveTrackSelectionFactory = AdaptiveTrackSelection.Factory()
-
         player = ExoPlayerFactory.newSimpleInstance(
             this,
             DefaultRenderersFactory(
@@ -218,62 +202,40 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
             DefaultTrackSelector(adaptiveTrackSelectionFactory),
             DefaultLoadControl()
         )
-
         video_view.useController = true
-
         if (video_view.player == null)
             video_view.player = player
-
         player?.addListener(this)
-
         player?.addVideoListener(this)
-
     }
 
     private fun play(mUrl: String) {
-
         video_view.visibility = View.VISIBLE
-
         val videoUri = Uri.parse(mUrl)
-
         Log.i(TAG, "Url to play : $videoUri")
-
         val mediaSource = buildMediaSource(videoUri)
-
         player?.prepare(mediaSource)
-
         player?.playWhenReady = true
     }
 
     private fun play(mUrlList: MutableList<VideoItem>) {
-
         video_view.visibility = View.VISIBLE
-
         player?.removeListener(this)
-
         player?.removeVideoListener(this)
-
         val mediaSources = arrayListOf<MediaSource>()
         mUrlList.forEachIndexed { index, it ->
             mediaSources.add(buildMediaSource(Uri.parse(mUrlList[index].videoPath)))
         }
-
         val mediaSource: MediaSource = if (mediaSources.size == 1) {
             mediaSources[0]
         } else {
             ConcatenatingMediaSource(true, *(mediaSources).map { it }.toTypedArray())
         }
-
         player?.prepare(mediaSource)
-
         player?.seekTo(mUrlPosition, C.TIME_UNSET)
-
         player?.playWhenReady = true
-
         player?.addListener(this)
-
         player?.addVideoListener(this)
-
         video_view.setControllerVisibilityListener(this)
     }
 
@@ -281,7 +243,6 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
         val defaultExtractorsFactory = DefaultExtractorsFactory()
         defaultExtractorsFactory.setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_DETECT_ACCESS_UNITS)
         defaultExtractorsFactory.setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES)
-
         return ExtractorMediaSource.Factory {
             DefaultDataSourceFactory(
                 this,
@@ -344,8 +305,6 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
             setImageIfAudio(mUrlList[mUrlPosition].videoPath!!)
             titleTv.text = getVideoName(mUrlList[mUrlPosition].videoPath!!)
         }
-
-//        Toast.makeText(this, "$mUrlPosition", Toast.LENGTH_LONG).show()
     }
 
     private fun setImageIfAudio(path: String) {
@@ -358,25 +317,27 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
             ex == "ogg"
         ) {
             try {
-                val mmr = MediaMetadataRetriever()
-                mmr.setDataSource(path, HashMap<String, String>())
-                var inputStream: InputStream? = null
-                if (mmr.embeddedPicture != null) {
-                    inputStream = ByteArrayInputStream(mmr.embeddedPicture)
-                }
-                mmr.release()
-                val bitmap = BitmapFactory.decodeStream(inputStream)
+                val bitmap = getImageFromFile(File(path))
                 if (bitmap == null) {
                     video_view.defaultArtwork = getDrawable(R.drawable.icon)
                 } else {
                     video_view.defaultArtwork = BitmapDrawable(resources, bitmap);
                 }
-
             } catch (ex: Exception) {
                 video_view.defaultArtwork = getDrawable(R.drawable.icon)
             }
-
         }
+    }
+
+    private fun getImageFromFile(file: File): Bitmap? {
+        val mmr = MediaMetadataRetriever()
+        mmr.setDataSource(this, Uri.fromFile(file))
+        var inputStream: InputStream? = null
+        if (mmr.embeddedPicture != null) {
+            inputStream = ByteArrayInputStream(mmr.embeddedPicture)
+        }
+        mmr.release()
+        return BitmapFactory.decodeStream(inputStream)
     }
 
     private fun getEx(url: String): String {
@@ -535,8 +496,6 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
         return null
     }
 
-
 //=============================================================================================
-
 
 }

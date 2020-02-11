@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.media.vplayer">
+    package="com.pip.vplayer">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -18,7 +18,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
         <activity
-            android:name=".ui.splash.SplashActivity"
+            android:name="com.pip.vplayer.ui.splash.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
@@ -27,9 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.settings.SettingsActivity" />
+        <activity android:name="com.pip.vplayer.ui.settings.SettingsActivity" />
         <activity
-            android:name=".ui.player.PlayerActivity"
+            android:name="com.pip.vplayer.ui.player.PlayerActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
@@ -52,7 +52,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.media.vplayer.ui.home.MainActivity"
+            android:name="com.pip.vplayer.ui.home.MainActivity"
             android:screenOrientation="portrait" />
 
         <provider

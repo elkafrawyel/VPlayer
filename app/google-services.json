@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:296333817065:android:6caf6ae5bc58bd35edec78",
+        "mobilesdk_app_id": "1:296333817065:android:a6c1255e66770ae6edec78",
         "android_client_info": {
-          "package_name": "com.media.vplayer"
+          "package_name": "com.pip.vplayer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "296333817065-53flmi78jnmsvkc34t72irhn58dj7u61.apps.googleusercontent.com",
+          "client_id": "296333817065-ehf8qnu7b082b3aao63gkj82t2ucj89e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.media.vplayer",
+            "package_name": "com.pip.vplayer",
             "certificate_hash": "2ce10d3d962e2359b0f8655b7fe2d5370c4b244c"
           }
         },

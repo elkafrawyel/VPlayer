@@ -1,7 +1,8 @@
-package com.media.vplayer.ui.home
+package com.pip.vplayer.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -13,8 +14,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.media.vplayer.R
-import com.media.vplayer.ui.data.RowModel
+import com.pip.vplayer.R
+import com.pip.vplayer.ui.data.RowModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.card.MaterialCardView
@@ -32,8 +33,8 @@ class RowAdapter(
     private var actionLock = false
 
     class ParentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        internal var name_tv: TextView = itemView.findViewById(R.id.parentTv) as TextView
-        internal var toggle_btn: ImageView = itemView.findViewById(R.id.toggle_btn) as ImageView
+        internal var nameTv: TextView = itemView.findViewById(R.id.parentTv) as TextView
+        internal var toggleBtn: ImageView = itemView.findViewById(R.id.toggle_btn) as ImageView
         internal var parentRow: MaterialCardView =
             itemView.findViewById(R.id.parentRow) as MaterialCardView
 
@@ -42,8 +43,8 @@ class RowAdapter(
     class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var videoItem: MaterialCardView =
             itemView.findViewById(R.id.videoItem) as MaterialCardView
-        internal var name_tv: TextView = itemView.findViewById(R.id.name) as TextView
-        internal var duration_tv: TextView = itemView.findViewById(R.id.duration) as TextView
+        internal var nameTv: TextView = itemView.findViewById(R.id.name) as TextView
+        internal var durationTv: TextView = itemView.findViewById(R.id.duration) as TextView
         internal var image: ImageView = itemView.findViewById(R.id.image) as ImageView
         internal var options: ImageView = itemView.findViewById(R.id.options) as ImageView
     }
@@ -79,37 +80,25 @@ class RowAdapter(
     }
 
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, p1: Int) {
-        val row = rowModels[p1]
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val row = rowModels[position]
 
         when (row.type) {
             RowModel.VIDEO_PARENT -> {
-                (holder as ParentViewHolder).name_tv.text =
+                (holder as ParentViewHolder).nameTv.text =
                     "${row.parent.name} (${row.parent.videoList?.size})"
 
                 if (row.parent.videoList == null || row.parent.videoList!!.size == 0) {
-                    holder.toggle_btn.visibility = View.GONE
+                    holder.toggleBtn.visibility = View.GONE
                 } else {
-                    if (holder.toggle_btn.visibility == View.GONE) {
-                        holder.toggle_btn.visibility = View.VISIBLE
+                    if (holder.toggleBtn.visibility == View.GONE) {
+                        holder.toggleBtn.visibility = View.VISIBLE
                     }
 
                     if (row.isExpanded) {
-//                        holder.name_tv.setCompoundDrawablesWithIntrinsicBounds(
-//                            R.drawable.ic_folder_open_black_24dp,
-//                            0,
-//                            0,
-//                            0
-//                        )
-                        holder.toggle_btn.setImageResource(R.drawable.ic_remove_circle_outline_black_24dp)
+                        holder.toggleBtn.setImageResource(R.drawable.ic_remove_circle_outline_black_24dp)
                     } else {
-//                        holder.name_tv.setCompoundDrawablesWithIntrinsicBounds(
-//                            R.drawable.ic_folder_white_24dp,
-//                            0,
-//                            0,
-//                            0
-//                        )
-                        holder.toggle_btn.setImageResource(R.drawable.ic_control_point_black_24dp)
+                        holder.toggleBtn.setImageResource(R.drawable.ic_control_point_black_24dp)
                     }
 
                     holder.parentRow.setOnClickListener {
@@ -117,10 +106,10 @@ class RowAdapter(
                             actionLock = true
                             if (row.isExpanded) {
                                 row.isExpanded = false
-                                collapse(p1)
+                                collapse(position)
                             } else {
                                 row.isExpanded = true
-                                expand(p1)
+                                expand(position)
                             }
                         }
                     }
@@ -129,8 +118,8 @@ class RowAdapter(
 
             RowModel.VIDEO_ITEM -> {
                 holder as VideoViewHolder
-                (holder).name_tv.text = row.video.videoName
-                (holder).duration_tv.text = row.video.videoDuration
+                (holder).nameTv.text = row.video.videoName
+                (holder).durationTv.text = row.video.videoDuration
                 val path = row.video.videoPath!!
                 val file = File(path)
                 if (file.extension == "mp3" ||
@@ -140,14 +129,7 @@ class RowAdapter(
                     file.extension == "ac3" ||
                     file.extension == "ogg"
                 ) {
-                    val mmr = MediaMetadataRetriever()
-                    mmr.setDataSource(context, Uri.fromFile(file))
-                    var inputStream: InputStream? = null
-                    if (mmr.embeddedPicture != null) {
-                        inputStream = ByteArrayInputStream(mmr.embeddedPicture)
-                    }
-                    mmr.release()
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    val bitmap = getImageFromFile(file)
                     if (bitmap == null) {
                         Glide.with(context).load(R.drawable.icon).into((holder).image)
                     } else {
@@ -156,14 +138,27 @@ class RowAdapter(
                 } else {
                     (holder).image.loadWithPlaceHolder(Uri.fromFile(file))
                 }
+
+
                 (holder).videoItem.setOnClickListener {
-                    iVideoCallback.clicked(p1)
+                    iVideoCallback.clicked(position)
                 }
                 (holder).options.setOnClickListener {
-                    showVideoMenu((holder.options), p1)
+                    showVideoMenu((holder.options), position)
                 }
             }
         }
+    }
+
+    private fun getImageFromFile(file: File): Bitmap? {
+        val mmr = MediaMetadataRetriever()
+        mmr.setDataSource(context, Uri.fromFile(file))
+        var inputStream: InputStream? = null
+        if (mmr.embeddedPicture != null) {
+            inputStream = ByteArrayInputStream(mmr.embeddedPicture)
+        }
+        mmr.release()
+        return BitmapFactory.decodeStream(inputStream)
     }
 
 
@@ -184,17 +179,11 @@ class RowAdapter(
 
     }
 
-
     private fun expand(position: Int) {
-
         var nextPosition = position
-
         val row = rowModels[position]
-
         when (row.type) {
-
             RowModel.VIDEO_PARENT -> {
-
                 for (video in row.parent.videoList!!) {
                     rowModels.add(
                         ++nextPosition,
@@ -204,39 +193,30 @@ class RowAdapter(
                         )
                     )
                 }
-
                 notifyDataSetChanged()
             }
         }
-
         actionLock = false
     }
 
     private fun collapse(position: Int) {
         val row = rowModels[position]
         val nextPosition = position + 1
-
         when (row.type) {
-
             RowModel.VIDEO_PARENT -> {
-
                 while (true) {
                     if (nextPosition == rowModels.size || rowModels[nextPosition].type == RowModel.VIDEO_PARENT) {
                         break
                     }
                     rowModels.removeAt(nextPosition)
                 }
-
                 notifyDataSetChanged()
             }
         }
-
         actionLock = false
     }
 
-
     override fun getItemCount() = rowModels.size
-
 
     private fun showVideoMenu(optionIcon: ImageView, position: Int) {
         val popup = PopupMenu(context, optionIcon)

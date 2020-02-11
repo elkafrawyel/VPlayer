@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.settings.SettingsActivity">
+    tools:context=".ui.settings.SettingsActivity"
+    >
 
     <!--    ?colorPrimary get color of current theme-->
     <androidx.appcompat.widget.Toolbar
@@ -33,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:src="@drawable/ic_arrow_back_white_36dp"
+                android:src="@drawable/ic_keyboard_arrow_left_white_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -42,7 +43,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="8dp"
                 android:text="@string/app_name"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textColor="@android:color/white"
@@ -134,5 +134,19 @@
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/theme_circle_three" />
+
+        <View
+            android:id="@+id/themeFour"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/theme_circle_four" />
+
+        <View
+            android:id="@+id/themeFive"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/theme_circle_five" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

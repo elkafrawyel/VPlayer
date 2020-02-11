@@ -1,4 +1,4 @@
-package com.media.vplayer.ui.data
+package com.pip.vplayer.ui.data
 
 import androidx.annotation.IntDef
 

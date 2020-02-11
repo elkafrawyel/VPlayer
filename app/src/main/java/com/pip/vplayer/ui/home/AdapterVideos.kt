@@ -1,16 +1,16 @@
-package com.media.vplayer.ui.home
+package com.pip.vplayer.ui.home
 
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.widget.ImageView
-import com.media.vplayer.R
+import com.pip.vplayer.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import java.io.File
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.media.vplayer.ui.data.VideoItem
+import com.pip.vplayer.ui.data.VideoItem
 
 
 class AdapterVideos : BaseQuickAdapter<VideoItem, BaseViewHolder>(R.layout.video_item_view) {

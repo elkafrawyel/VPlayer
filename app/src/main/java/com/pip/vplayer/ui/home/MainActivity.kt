@@ -1,4 +1,4 @@
-package com.media.vplayer.ui.home
+package com.pip.vplayer.ui.home
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -23,13 +23,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.media.vplayer.R
-import com.media.vplayer.ui.data.RowModel
-import com.media.vplayer.ui.data.VideoItem
-import com.media.vplayer.ui.data.VideoParent
-import com.media.vplayer.ui.player.PlayerActivity
-import com.media.vplayer.ui.settings.SettingsActivity
-import com.media.vplayer.uitiles.PreferencesHelper
+import com.pip.vplayer.R
+import com.pip.vplayer.ui.data.RowModel
+import com.pip.vplayer.ui.data.VideoItem
+import com.pip.vplayer.ui.data.VideoParent
+import com.pip.vplayer.ui.player.PlayerActivity
+import com.pip.vplayer.ui.settings.SettingsActivity
+import com.pip.vplayer.uitiles.PreferencesHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
         }
 
         sync.setOnClickListener {
-
             setUpVideosList()
         }
 
@@ -89,6 +88,8 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
             1 -> setTheme(R.style.AppThemeOne)
             2 -> setTheme(R.style.AppThemeTwo)
             3 -> setTheme(R.style.AppThemeThree)
+            4 -> setTheme(R.style.AppThemeFour)
+            5 -> setTheme(R.style.AppThemeFive)
         }
     }
 
@@ -106,75 +107,77 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
 
     private fun setUpVideosList() {
 
-        loading.visibility = View.VISIBLE
+        if (loading.visibility == View.GONE) {
+            loading.visibility = View.VISIBLE
 
-        val mediaList: ArrayList<File> = ArrayList()
+            val mediaList: ArrayList<File> = ArrayList()
 
-        rows.clear()
-        rowAdapter.rowModels.clear()
-        rowAdapter.notifyDataSetChanged()
-        videosRv.recycledViewPool.clear()
-        doAsync {
+            rows.clear()
+            rowAdapter.rowModels.clear()
+            rowAdapter.notifyDataSetChanged()
+            videosRv.recycledViewPool.clear()
+            doAsync {
 
-            val sortOrder = MediaStore.Video.Media.DISPLAY_NAME;
+                val sortOrder = MediaStore.Video.Media.DISPLAY_NAME;
 
-            val uriVideo: Uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            val projectionVideo = arrayOf(
-                MediaStore.Video.VideoColumns.MIME_TYPE,
-                MediaStore.Video.VideoColumns.DATA
-            )
-            val cursorVideo: Cursor? =
-                applicationContext.contentResolver.query(
-                    uriVideo,
-                    projectionVideo,
-                    null,
-                    null,
-                    sortOrder
+                val uriVideo: Uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                val projectionVideo = arrayOf(
+                    MediaStore.Video.VideoColumns.MIME_TYPE,
+                    MediaStore.Video.VideoColumns.DATA
                 )
 
-            if (cursorVideo != null) {
-                while (cursorVideo.moveToNext()) {
-                    val type =
-                        cursorVideo.getString(cursorVideo.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE))
-                    val dataIndex = cursorVideo.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
-                    val path = cursorVideo.getString(dataIndex)
-
-                    mediaList.add(File(path))
-                }
-                cursorVideo.close()
-            }
-
-            if (PreferencesHelper(this@MainActivity).audioAllowed == 1) {
-                val uriAudio: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                val projectionAudio = arrayOf(
-                    MediaStore.Audio.AudioColumns.MIME_TYPE,
-                    MediaStore.Audio.AudioColumns.DATA
-                )
-                val cursorAudio: Cursor? =
+                val cursorVideo: Cursor? =
                     applicationContext.contentResolver.query(
-                        uriAudio,
-                        projectionAudio,
+                        uriVideo,
+                        projectionVideo,
                         null,
                         null,
                         sortOrder
                     )
 
-                if (cursorAudio != null) {
-                    while (cursorAudio.moveToNext()) {
+                if (cursorVideo != null) {
+                    while (cursorVideo.moveToNext()) {
                         val type =
-                            cursorAudio.getString(cursorAudio.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE))
+                            cursorVideo.getString(cursorVideo.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE))
                         val dataIndex =
-                            cursorAudio.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
-                        val path =
-                            cursorAudio.getString(dataIndex)
+                            cursorVideo.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+                        val path = cursorVideo.getString(dataIndex)
 
                         mediaList.add(File(path))
                     }
-                    cursorAudio.close()
+                    cursorVideo.close()
                 }
-            }
 
-            runOnUiThread {
+                if (PreferencesHelper(this@MainActivity).audioAllowed == 1) {
+                    val uriAudio: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    val projectionAudio = arrayOf(
+                        MediaStore.Audio.AudioColumns.MIME_TYPE,
+                        MediaStore.Audio.AudioColumns.DATA
+                    )
+                    val cursorAudio: Cursor? =
+                        applicationContext.contentResolver.query(
+                            uriAudio,
+                            projectionAudio,
+                            null,
+                            null,
+                            sortOrder
+                        )
+
+                    if (cursorAudio != null) {
+                        while (cursorAudio.moveToNext()) {
+                            val type =
+                                cursorAudio.getString(cursorAudio.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE))
+                            val dataIndex =
+                                cursorAudio.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+                            val path =
+                                cursorAudio.getString(dataIndex)
+
+                            mediaList.add(File(path))
+                        }
+                        cursorAudio.close()
+                    }
+                }
+
                 rows.clear()
                 val result = mediaList.groupBy { it.parentFile!!.name }
                 result.entries.forEach { entry: Map.Entry<String, List<File>> ->
@@ -183,26 +186,27 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
                             RowModel.VIDEO_PARENT,
                             VideoParent(
                                 if (entry.key == "0") getString(R.string.internalMemory) else entry.key,
-                                entry.value.mapNotNull {
+                                entry.value.sortedBy { it.nameWithoutExtension }.mapNotNull {
                                     if (it.exists()) {
                                         val duration = formatFileDuration(it.path)
                                         VideoItem(it.nameWithoutExtension, it.path, duration)
                                     } else {
                                         null
                                     }
-
                                 }.toMutableList()
                             )
                         )
                     )
                 }
 
-//                rows.filterNot { it.parent.videoList!!.isEmpty() }
+//          rows.filterNot { it.parent.videoList!!.isEmpty() }
                 rows.sortBy { rowModel -> rowModel.parent.name }
 
-                rowAdapter.notifyDataSetChanged()
-                refresh.isRefreshing = false
-                loading.visibility = View.GONE
+                runOnUiThread {
+                    rowAdapter.notifyDataSetChanged()
+                    refresh.isRefreshing = false
+                    loading.visibility = View.GONE
+                }
             }
         }
     }
@@ -212,10 +216,6 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
         val dialogView = layoutInflater.inflate(R.layout.custom_dialog, null);
         val editText = dialogView.findViewById<EditText>(R.id.editText);
         editText.hint = getString(R.string.tapToAddLink)
-        val clipboard: ClipboardManager =
-            getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        // clipboard.setText("Text to copy")
-        editText.setText(clipboard.primaryClip!!.getItemAt(0).text.toString())
 
         val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.streamLink))
@@ -224,13 +224,7 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
                 val mUrl = editText.text.toString().trim()
                 val streamList = ArrayList<VideoItem>()
                 val fileName = mUrl.substring(mUrl.lastIndexOf('/') + 1)
-                streamList.add(
-                    VideoItem(
-                        fileName,
-                        mUrl,
-                        ""
-                    )
-                )
+                streamList.add(VideoItem(fileName, mUrl, ""))
                 PlayerActivity.start(this, streamList, 0)
             }.setNegativeButton(getString(R.string.download)) { dialog, which ->
                 val mUrl = editText.text.toString().trim()
@@ -239,26 +233,21 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
                 }
             }.show()
 
-        var mUrl = editText.text.toString().trim()
-        if (TextUtils.isEmpty(mUrl)) {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
-        } else {
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = !mUrl.endsWith("ts")
-
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
-        }
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
 
         // Now set the text change listener for edittext
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                mUrl = editText.text.toString().trim()
-                if (TextUtils.isEmpty(mUrl)) {
+                val mUrl = editText.text.toString().trim()
+                if (TextUtils.isEmpty(mUrl) ||
+                    !URLUtil.isValidUrl(mUrl) ||
+                    !URLUtil.isNetworkUrl(mUrl)
+                ) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
                     dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
                 } else {
                     dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = !mUrl.endsWith("ts")
-
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
                 }
 
@@ -345,7 +334,6 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
 //                }
 //            }
 //            cursor.close();
-
 
         } catch (ex: java.lang.Exception) {
             Toast.makeText(
@@ -439,8 +427,7 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
                                     Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                     Uri.fromFile(newFile)
                                 )
-                            );
-
+                            )
 
                             rows[position].video.videoPath = newFile.path
                             rows[position].video.videoName = newFile.nameWithoutExtension
@@ -471,7 +458,6 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
 
             }
         })
-
 
     }
 

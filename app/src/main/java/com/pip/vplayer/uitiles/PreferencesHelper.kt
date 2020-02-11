@@ -1,4 +1,4 @@
-package com.media.vplayer.uitiles
+package com.pip.vplayer.uitiles
 
 import android.content.Context
 import android.preference.PreferenceManager
@@ -16,6 +16,12 @@ class PreferencesHelper(private val context: Context) {
 
     private val preference = PreferenceManager.getDefaultSharedPreferences(context)
 
+    var pipMode = preference.getInt(PIP_MODE, 0)
+        set(value) = preference.edit().putInt(PIP_MODE, value).apply()
+
+    var audioAllowed = preference.getInt(AUDIO_ALLOWED, 0)
+        set(value) = preference.edit().putInt(AUDIO_ALLOWED, value).apply()
+
     var isLoggedIn = preference.getBoolean(IS_LOGGED_IN, false)
         set(value) = preference.edit().putBoolean(IS_LOGGED_IN, value).apply()
 
@@ -24,12 +30,6 @@ class PreferencesHelper(private val context: Context) {
 
     var themeNumber = preference.getInt(THEME, 1)
         set(value) = preference.edit().putInt(THEME, value).apply()
-
-    var pipMode = preference.getInt(PIP_MODE, 1)
-        set(value) = preference.edit().putInt(PIP_MODE, value).apply()
-
-    var audioAllowed = preference.getInt(AUDIO_ALLOWED, 0)
-        set(value) = preference.edit().putInt(AUDIO_ALLOWED, value).apply()
 
     var language = preference.getString(LANGUAGE, null)
         //    var language = preference.getString(LANGUAGE, Constants.Language.ARABIC.value)

@@ -104,7 +104,7 @@
                 android:layout_height="25dp"
                 android:layout_weight="1"
                 app:buffered_color="@color/controls_color"
-                app:played_color="@color/colorAccent"
+                app:played_color="?colorPrimary"
                 app:unplayed_color="@android:color/darker_gray" />
 
             <TextView
