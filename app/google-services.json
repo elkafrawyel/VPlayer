@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "296333817065",
+    "firebase_url": "https://vplayer-78c1d.firebaseio.com",
+    "project_id": "vplayer-78c1d",
+    "storage_bucket": "vplayer-78c1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296333817065:android:6caf6ae5bc58bd35edec78",
+        "android_client_info": {
+          "package_name": "com.media.vplayer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "296333817065-53flmi78jnmsvkc34t72irhn58dj7u61.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.media.vplayer",
+            "certificate_hash": "2ce10d3d962e2359b0f8655b7fe2d5370c4b244c"
+          }
+        },
+        {
+          "client_id": "296333817065-oaam9ssuuial99vrha1odhck099vrfce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6WcGEUHeVXp5CKAvwEsFRWwwgk5Y-rF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "296333817065-oaam9ssuuial99vrha1odhck099vrfce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

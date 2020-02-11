@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">V Player</string>
+
+    <string name="internalMemory">Internal Memory</string>
+    <string name="tapToAddLink">Tap to add a video link to play.</string>
+    <string name="play">Play</string>
+    <string name="streamLink">Stream a Link</string>
+    <string name="download">Download</string>
+    <string name="downloading">Downloading…</string>
+    <string name="errorDownloading">Download link is broken or not available for download</string>
+    <string name="storageDenied">Storage permission denied</string>
+    <string name="typeVideoName">Type video name here.</string>
+    <string name="renameFile">Rename File</string>
+    <string name="ok">OK</string>
+    <string name="errorPlaying">Error Playing Source</string>
+    <string name="refreshHome">Refresh home to update list</string>
+    <string name="restartApp">Restart the app to apply the theme?</string>
+    <string name="notNow">Not Now</string>
+    <string name="automatic_picture_in_picture_mode">Automatic Picture in Picture mode</string>
+    <string name="audio_player">Audio Player</string>
+    <string name="theme">Theme</string>
+    <string name="invalid">unknown</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="deleteFile">Are you sure to delete this file?</string>
+    <string name="fileExists">Can\'t rename the file.\\nThere is a file with the same name.</string>
+
+</resources>

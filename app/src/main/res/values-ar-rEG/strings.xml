@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VPlayer مشغل</string>
+    <string name="internalMemory">الذاكرة الداخلية</string>
+    <string name="tapToAddLink">اضغط لاضافة رابط</string>
+    <string name="play">تشغيل</string>
+    <string name="streamLink">تشغيل عبر الانترنت</string>
+    <string name="download">تحميل</string>
+    <string name="downloading">بدأ التحميل</string>
+    <string name="errorDownloading">خطأ في التحميل</string>
+    <string name="storageDenied">تم رفض صلاحية الوصول للملفات</string>
+    <string name="typeVideoName">اكتب اسم الملف هنا</string>
+    <string name="renameFile">اعادة تسمية الملف</string>
+    <string name="ok">حسنا</string>
+    <string name="errorPlaying">خطأ في التشغيل</string>
+    <string name="refreshHome">قم بتحديث القائمة في الصفحة الرئيسية</string>
+    <string name="restartApp">اعادة التشغيل لتطبيق التغيير؟</string>
+    <string name="notNow">ليس الان</string>
+    <string name="automatic_picture_in_picture_mode">وضع الصورة الصغيرة تلقائيا</string>
+    <string name="audio_player">مشغل الصوت</string>
+    <string name="theme">لون التصميم</string>
+    <string name="invalid">غير معروف</string>
+    <string name="rename">اعادة التسمية</string>
+    <string name="delete">حذف</string>
+    <string name="cancel">الغاء</string>
+    <string name="deleteFile">هل انت متأكد من حذف هذا الملف؟</string>
+    <string name="fileExists">لا يمكن اعادة تسمية الملف.هناك ملف يحمل نفس الاسم بالفعل.</string>
+
+</resources>

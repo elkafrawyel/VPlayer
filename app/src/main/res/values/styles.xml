@@ -1,0 +1,88 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppThemeOne" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/font</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    '
+    <!-- Base application theme. -->
+    <style name="AppThemeTwo" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#4CAF50</item>
+        <item name="colorPrimaryDark">#397E3B</item>
+        <item name="colorAccent">#2196F3</item>
+        <item name="android:fontFamily">@font/font</item>
+        <item name="android:textAllCaps">false</item>
+
+    </style>
+
+
+    <!-- Base application theme. -->
+    <style name="AppThemeThree" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#FF9800</item>
+        <item name="colorPrimaryDark">#DFA908</item>
+        <item name="colorAccent">#9C27B0</item>
+        <item name="android:fontFamily">@font/font</item>
+        <item name="android:textAllCaps">false</item>
+
+    </style>
+
+    <style name="ExoMediaButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">@dimen/exo_media_button_width</item>
+        <item name="android:layout_height">@dimen/exo_media_button_height</item>
+    </style>
+
+    <style name="ExoMediaButton.FastForward">
+        <item name="android:src">@drawable/ic_fast_forward_black_36dp</item>
+        <item name="android:contentDescription">@string/exo_controls_fastforward_description</item>
+    </style>
+
+    <style name="ExoMediaButton.Next">
+        <item name="android:src">@drawable/ic_skip_next_black_36dp</item>
+        <item name="android:contentDescription">@string/exo_controls_next_description</item>
+    </style>
+
+    <style name="ExoMediaButton.Pause">
+        <item name="android:src">@drawable/ic_pause_white_24dp</item>
+        <item name="android:contentDescription">@string/exo_controls_pause_description</item>
+    </style>
+
+    <style name="ExoMediaButton.Play">
+        <item name="android:src">@drawable/ic_play_arrow_white_24dp</item>
+        <item name="android:contentDescription">@string/exo_controls_play_description</item>
+    </style>
+
+    <style name="ExoMediaButton.Previous">
+        <item name="android:src">@drawable/ic_skip_previous_black_36dp</item>
+        <item name="android:contentDescription">@string/exo_controls_previous_description</item>
+    </style>
+
+    <style name="ExoMediaButton.Rewind">
+        <item name="android:src">@drawable/ic_fast_rewind_black_36dp</item>
+        <item name="android:contentDescription">@string/exo_controls_rewind_description</item>
+    </style>
+
+    <style name="ExoMediaButton.Shuffle">
+        <item name="android:src">@drawable/ic_shuffle_black_36dp</item>
+        <item name="android:contentDescription">@string/exo_controls_shuffle_description</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppThemeOne">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+</resources>
