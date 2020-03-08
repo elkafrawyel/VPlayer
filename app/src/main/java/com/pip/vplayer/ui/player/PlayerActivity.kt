@@ -47,7 +47,12 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.google.android.exoplayer2.video.VideoListener
+import com.google.android.gms.ads.AdRequest
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_player.*
+import kotlinx.android.synthetic.main.activity_player.adView
+import kotlinx.android.synthetic.main.activity_player.loading
+import kotlinx.android.synthetic.main.activity_player.toolbar
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.InputStream
@@ -97,6 +102,12 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
         } else {
             pipBtn.visibility = View.GONE
         }
+
+        adView.loadAd(
+            AdRequest.Builder()
+                .addTestDevice("410E806C439261CF851B922E62D371EB")
+                .build()
+        )
     }
 
     private fun setAppTheme() {
@@ -275,6 +286,13 @@ class PlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener,
             else -> {
                 loading.visibility = View.GONE
             }
+        }
+
+        if (playWhenReady && playbackState == Player.STATE_READY) {
+            adView.visibility = View.GONE
+        } else {
+            // player paused in any state
+            adView.visibility = View.VISIBLE
         }
     }
 

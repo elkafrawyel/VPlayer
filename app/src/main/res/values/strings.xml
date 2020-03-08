@@ -1,6 +1,10 @@
-<resources>
-    <string name="app_name">V Player</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
+    <string name="appId" tools:ignore="MissingTranslation">ca-app-pub-9446744666336593~1273597530</string>
+    <string name="bannerAd" tools:ignore="MissingTranslation">ca-app-pub-9446744666336593/1799855926</string>
+
+
+    <string name="app_name">V Player</string>
     <string name="internalMemory">Internal Memory</string>
     <string name="tapToAddLink">Tap to add a video link to play.</string>
     <string name="play">Play</string>
@@ -25,5 +29,6 @@
     <string name="cancel">Cancel</string>
     <string name="deleteFile">Are you sure to delete this file?</string>
     <string name="fileExists">Can\'t rename the file.\\nThere is a file with the same name.</string>
+    <string name="errorOpening">Error Opening The Dialog</string>
 
 </resources>

@@ -25,5 +25,6 @@
     <string name="cancel">الغاء</string>
     <string name="deleteFile">هل انت متأكد من حذف هذا الملف؟</string>
     <string name="fileExists">لا يمكن اعادة تسمية الملف.هناك ملف يحمل نفس الاسم بالفعل.</string>
+    <string name="errorOpening">خطأ غي فتح النافذة</string>
 
 </resources>

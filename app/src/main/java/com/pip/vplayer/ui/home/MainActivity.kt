@@ -23,6 +23,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.gms.ads.AdRequest
 import com.pip.vplayer.R
 import com.pip.vplayer.ui.data.RowModel
 import com.pip.vplayer.ui.data.VideoItem
@@ -80,6 +81,12 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
             android.R.color.holo_green_light,
             android.R.color.holo_orange_light,
             android.R.color.holo_red_light
+        )
+
+        adView.loadAd(
+            AdRequest.Builder()
+                .addTestDevice("410E806C439261CF851B922E62D371EB")
+                .build()
         )
     }
 
@@ -213,54 +220,67 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
 
     @SuppressLint("InflateParams")
     private fun addStreamLink() {
-        val dialogView = layoutInflater.inflate(R.layout.custom_dialog, null);
-        val editText = dialogView.findViewById<EditText>(R.id.editText);
-        editText.hint = getString(R.string.tapToAddLink)
+        try {
+            val dialogView = layoutInflater.inflate(R.layout.custom_dialog, null)
+            val editText = dialogView.findViewById<EditText>(R.id.editText)
+            editText.hint = getString(R.string.tapToAddLink)
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.streamLink))
-            .setView(dialogView)
-            .setPositiveButton(getString(R.string.play)) { dialog, which ->
-                val mUrl = editText.text.toString().trim()
-                val streamList = ArrayList<VideoItem>()
-                val fileName = mUrl.substring(mUrl.lastIndexOf('/') + 1)
-                streamList.add(VideoItem(fileName, mUrl, ""))
-                PlayerActivity.start(this, streamList, 0)
-            }.setNegativeButton(getString(R.string.download)) { dialog, which ->
-                val mUrl = editText.text.toString().trim()
-                if (URLUtil.isValidUrl(mUrl)) {
-                    downLoadLink(mUrl)
+            val dialog = MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.streamLink))
+                .setView(dialogView)
+                .setPositiveButton(getString(R.string.play)) { dialog, which ->
+                    val mUrl = editText.text.toString().trim()
+                    val streamList = ArrayList<VideoItem>()
+                    val fileName = mUrl.substring(mUrl.lastIndexOf('/') + 1)
+                    streamList.add(VideoItem(fileName, mUrl, ""))
+                    PlayerActivity.start(this, streamList, 0)
+                }.setNegativeButton(getString(R.string.download)) { dialog, which ->
+                    val mUrl = editText.text.toString().trim()
+                    if (URLUtil.isValidUrl(mUrl)) {
+                        downLoadLink(mUrl)
+                    }
+                }.show()
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
+
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    val mUrl = editText.text.toString().trim()
+                    if (TextUtils.isEmpty(mUrl) ||
+                        !URLUtil.isValidUrl(mUrl) ||
+                        !URLUtil.isNetworkUrl(mUrl)
+                    ) {
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
+                    } else {
+                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled =
+                            !mUrl.endsWith("ts")
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
+                    }
+
                 }
-            }.show()
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
-
-        // Now set the text change listener for edittext
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val mUrl = editText.text.toString().trim()
-                if (TextUtils.isEmpty(mUrl) ||
-                    !URLUtil.isValidUrl(mUrl) ||
-                    !URLUtil.isNetworkUrl(mUrl)
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
                 ) {
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
-                } else {
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = !mUrl.endsWith("ts")
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
+
                 }
 
-            }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-        })
+                }
+            })
+        }catch (ex:Exception){
+            Toast.makeText(
+                this,
+                getString(R.string.errorOpening),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun getFileName(url: String): String {
@@ -304,36 +324,6 @@ class MainActivity : AppCompatActivity(), IVideoCallback, SwipeRefreshLayout.OnR
             }
 
             val downloadId = downloadManager.enqueue(request)
-
-//            val cursor = downloadManager.query(DownloadManager.Query().setFilterById(downloadId));
-//
-//            if (cursor != null && cursor.moveToNext()) {
-//                when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
-//                    DownloadManager.STATUS_FAILED -> {
-//                        // do something when failed
-//                        Toast.makeText(
-//                            this,
-//                            "Download link is broken or not available for download",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//                    }
-//                    DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED -> {
-//                        // do something pending or paused
-//                    }
-//                    DownloadManager.STATUS_SUCCESSFUL -> {
-//                        Toast.makeText(
-//                            this,
-//                            "$fileName is downloaded successfully",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//                        setUpVideosList()
-//                    }
-//                    DownloadManager.STATUS_RUNNING -> {
-//                        // do something when running
-//                    }
-//                }
-//            }
-//            cursor.close();
 
         } catch (ex: java.lang.Exception) {
             Toast.makeText(

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.ads.MobileAds
 import com.pip.vplayer.R
 import com.pip.vplayer.ui.home.MainActivity
 import com.pip.vplayer.uitiles.PreferencesHelper
@@ -16,6 +17,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_splash)
+
+        MobileAds.initialize(this,getString(R.string.appId))
 
         val myFadeInAnimation: Animation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         imageView.startAnimation(myFadeInAnimation)
